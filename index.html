@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Terminal Typing Animation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="terminal.css">
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+            <span class="terminal-title">Terminal</span>
+        </div>
+        <div class="terminal-body">
+            <pre id="typewriter"></pre>
+        </div>
+    </div>
+    <div class="timer-cancel-area">
+        <form id="loginForm" autocomplete="off" class="terminal-login">
+            <input type="password" id="password" placeholder="Enter password to cancel timer" required>
+            <button type="submit">Submit</button>
+            <span id="login-message"></span>
+        </form>
+        <div id="timer" class="terminal-timer-outside"></div>
+    </div>
+    <!-- Redirect Modal -->
+    <div id="redirect-modal" class="redirect-modal">
+        <div class="redirect-box">
+            <span class="redirect-title">Do you want to redirect to <b>File#2219</b>?</span>
+            <div class="redirect-actions">
+                <button id="redirect-yes" class="redirect-btn yes">Yes</button>
+                <button id="redirect-no" class="redirect-btn no">No</button>
+            </div>
+            <div id="redirect-loader" class="redirect-loader" style="display:none;">
+                <span class="loader"></span>
+                <span class="loading-text">Redirecting...</span>
+            </div>
+        </div>
+    </div>
+    <script src="typewriter.js"></script>
+    <script src="redirect-modal.js"></script>
+</body>
+</html>
