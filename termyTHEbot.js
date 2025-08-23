@@ -4,8 +4,8 @@
 
 
 (function () {
-  const STORAGE_KEY = 'chatgpt4bot_history';
-  const API_KEY = 'YOUR_OPENAI_API_KEY'; // <-- Put your OpenAI key here (never expose in client code for production!)
+  const STORAGE_KEY = 'termyTHEbot_history';
+  const API_KEY = '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'; // <-- Put your OpenAI key here (never expose in client code for production!)
   const MODEL = 'gpt-4o'; // Or 'gpt-4-turbo', etc.
 
   let frameVisible = false;
