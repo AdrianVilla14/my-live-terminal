@@ -1,11 +1,5 @@
-// Floating ChatGPT-4 Bot Widget for your website
-// Shift+` toggles visibility. Remembers chat history in localStorage.
-// You must set your OpenAI API key below for this to work.
-
-
 (function () {
   const STORAGE_KEY = 'termyTHEbot_history';
-  const API_KEY = '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'; // <-- Put your OpenAI key here (never expose in client code for production!)
   const MODEL = 'gpt-4o'; // Or 'gpt-4-turbo', etc.
 
   let frameVisible = false;
@@ -16,8 +10,7 @@
   function loadChat() {
     try {
       const data = localStorage.getItem(STORAGE_KEY);
-      if (data) chatHistory = JSON.parse(data);
-      else chatHistory = [];
+      chatHistory = data ? JSON.parse(data) : [];
     } catch {
       chatHistory = [];
     }
@@ -28,7 +21,7 @@
     localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory));
   }
 
-  // Render chat in widget
+  // Render chat
   function updateDisplay() {
     if (!frame) return;
     const chatDiv = frame.querySelector('.chat-content');
@@ -41,7 +34,7 @@
     chatDiv.scrollTop = chatDiv.scrollHeight;
   }
 
-  // Floating frame & UI
+  // Floating frame
   function createFrame() {
     frame = document.createElement('div');
     frame.style.position = 'fixed';
@@ -59,14 +52,12 @@
     frame.style.fontSize = '13px';
     frame.style.display = 'none';
 
-    // Header
     const header = document.createElement('div');
     header.innerHTML = `<b>ChatGPT-4 Bot</b>
       <button style="float:right;" title="Clear chat" id="gpt-clear-btn">🗑️</button>`;
     header.style.marginBottom = '8px';
     frame.appendChild(header);
 
-    // Chat history
     const chatDiv = document.createElement('div');
     chatDiv.className = 'chat-content';
     chatDiv.style.height = '250px';
@@ -77,7 +68,6 @@
     chatDiv.style.marginBottom = '8px';
     frame.appendChild(chatDiv);
 
-    // Message input
     const inputDiv = document.createElement('div');
     inputDiv.style.display = 'flex';
     inputDiv.style.gap = '6px';
@@ -98,7 +88,6 @@
 
     document.body.appendChild(frame);
 
-    // Events
     sendBtn.onclick = () => sendMessage(input.value.trim());
     input.addEventListener('keydown', e => {
       if (e.key === 'Enter') sendMessage(input.value.trim());
@@ -112,64 +101,41 @@
     };
   }
 
-  // Send message to OpenAI API
+  // Send message (calls backend instead of OpenAI directly)
   async function sendMessage(msg) {
     if (!msg) return;
-    if (API_KEY === 'YOUR_OPENAI_API_KEY') {
-      alert('Set your OpenAI API key in chatgpt4bot.js!');
-      return;
-    }
     chatHistory.push({ role: 'user', content: msg });
     updateDisplay();
     saveChat();
 
-    // Show typing...
     chatHistory.push({ role: 'assistant', content: '...' });
     updateDisplay();
 
     try {
-      const history = chatHistory
-        .filter(m => m.role === 'user' || m.role === 'assistant')
-        .map(m => ({ role: m.role, content: m.content }));
-      // Remove the '...' typing placeholder before sending
-      history.pop();
+      const history = chatHistory.filter(m => m.role === 'user' || m.role === 'assistant');
+      history.pop(); // remove "..." placeholder
 
-      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          model: MODEL,
-          messages: history,
-          max_tokens: 700,
-          temperature: 0.7
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: MODEL, messages: history })
       });
+
       const data = await res.json();
-      // Remove '...' placeholder
       chatHistory.pop();
-      if (data.choices && data.choices[0]) {
-        chatHistory.push({
-          role: 'assistant',
-          content: data.choices[0].message.content.trim()
-        });
+      if (data.reply) {
+        chatHistory.push({ role: 'assistant', content: data.reply });
       } else {
-        chatHistory.push({
-          role: 'assistant',
-          content: 'Sorry, there was a problem. (API error)'
-        });
+        chatHistory.push({ role: 'assistant', content: 'Sorry, API error.' });
       }
     } catch (e) {
       chatHistory.pop();
-      chatHistory.push({ role: 'assistant', content: 'Error contacting OpenAI API.' });
+      chatHistory.push({ role: 'assistant', content: 'Error contacting server.' });
     }
     saveChat();
     updateDisplay();
   }
 
-  // Show/hide frame
   function setFrameVisible(visible) {
     frameVisible = visible;
     if (frame) {
@@ -178,7 +144,6 @@
     }
   }
 
-  // Keyboard shortcut (Shift + ~)
   function handleShortcut(e) {
     if (e.shiftKey && e.code === 'Backquote' && !e.ctrlKey && !e.altKey && !e.metaKey) {
       e.preventDefault();
@@ -186,7 +151,6 @@
     }
   }
 
-  // Initialize
   window.addEventListener('DOMContentLoaded', function() {
     loadChat();
     createFrame();
