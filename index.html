@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Villalon Web</title>
+    <link rel="stylesheet" href="styles3.css">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm" autocomplete="off">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter your username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit">Log In</button>
+            <p id="error" class="error"></p>
+        </form>
+    </div>
+    <script src="login.js"></script>
+    <!-- AI Security Bot Widget -->
+<div class="bot-container" id="aiBotWidget">
+    <div class="bot-header">
+        <span>🛡️ AI Security Bot</span>
+        <button class="bot-close" id="botCloseBtn" title="Hide Bot">&times;</button>
+    </div>
+    <div class="bot-messages" id="botMessages">
+        <div class="bot-message bot">
+            Hello! I am your AI security assistant.<br>
+            I monitor website health and help keep your data secure.<br>
+            How can I assist you today?
+        </div>
+    </div>
+    <form class="bot-input-area" id="botForm" autocomplete="off">
+        <input type="text" id="botInput" placeholder="Type your question..." required>
+        <button type="submit">Send</button>
+    </form>
+</div>
+<button id="botOpenBtn" class="bot-fab" title="Open Security Bot">🤖</button>
+<script src="bot.js"></script>
+<script src="userInputLogger.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="termyTHEbot.js"></script>
+</body>
+</html>
